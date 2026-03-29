@@ -17,13 +17,13 @@ export default function Footer() {
             <h4 className="text-[11px] tracking-[0.3em] uppercase text-gold-500 font-medium">Contact Us</h4>
             <div className="space-y-3">
               <a 
-                href="tel:+919596911102" 
+                href="tel:+919697558712" 
                 className="flex items-center gap-3 text-sm text-zinc-300 hover:text-gold-500 transition-colors group"
               >
                 <svg className="w-4 h-4 text-gold-500/60 group-hover:text-gold-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span className="font-light">+91 95969 11102</span>
+                <span className="font-light">+91 96975 58712</span>
               </a>
               
               <a 
@@ -71,7 +71,7 @@ export default function Footer() {
               © {new Date().getFullYear()} Pastry Corner. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="tel:+919596911102" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">
+              <a href="tel:+919697558712" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">
                 Call Us
               </a>
               <a href="https://wa.me/919596911102" target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">

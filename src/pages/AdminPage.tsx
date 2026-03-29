@@ -83,6 +83,9 @@ export default function AdminPage() {
   const [gdriveLinkInput, setGdriveLinkInput] = useState('');
   const [convertedLink, setConvertedLink] = useState('');
 
+  // Admin menu state
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+
   const fetchProducts = useCallback(async () => {
     const { data, error } = await supabase.from('products').select('*').order('sort_order');
     if (error) { console.error(error); return; }
@@ -302,39 +305,87 @@ export default function AdminPage() {
   // ── DASHBOARD ─────────────────────────────
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-white/10 px-8 py-5 flex items-center justify-between">
-        <div>
-          <span className="text-[9px] tracking-[0.5em] text-gold-600 uppercase font-light">@Admin</span>
-          <h1 className="text-xl font-serif font-light tracking-wide">Pastry Corner — Dashboard</h1>
+      <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-white/10 px-4 md:px-8 py-5">
+        <div className="flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            <span className="text-[9px] tracking-[0.5em] text-gold-600 uppercase font-light">@Admin</span>
+            <h1 className="text-base md:text-xl font-serif font-light tracking-wide truncate">Pastry Corner — Dashboard</h1>
+          </div>
+          
+          <div className="flex items-center gap-3 md:gap-6">
+            {/* Saving Status - Always Visible */}
+            {saving && <span className="text-[9px] md:text-[10px] tracking-widest text-zinc-400 uppercase animate-pulse">Saving…</span>}
+            {saved && <span className="text-[9px] md:text-[10px] tracking-widest text-emerald-400 uppercase">Saved ✓</span>}
+            
+            {/* Desktop Navigation */}
+            <a href="/" className="hidden md:block text-[10px] tracking-widest text-zinc-400 hover:text-gold-500 uppercase transition-colors">View Store →</a>
+            <button onClick={() => setAuthed(false)} className="hidden md:block text-[10px] tracking-widest text-zinc-500 hover:text-white uppercase transition-colors">Log Out</button>
+            
+            {/* Mobile Hamburger Menu */}
+            <button
+              onClick={() => setIsAdminMenuOpen(!isAdminMenuOpen)}
+              className="md:hidden text-zinc-400 hover:text-gold-500 transition-all duration-300 p-1"
+              aria-label="Admin Menu"
+            >
+              <svg className="w-5 h-5 stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isAdminMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 8h16M4 16h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-6">
-          {saving && <span className="text-[10px] tracking-widest text-zinc-400 uppercase animate-pulse">Saving…</span>}
-          {saved && <span className="text-[10px] tracking-widest text-emerald-400 uppercase">Saved ✓</span>}
-          <a href="/" className="text-[10px] tracking-widest text-zinc-400 hover:text-gold-500 uppercase transition-colors">View Store →</a>
-          <button onClick={() => setAuthed(false)} className="text-[10px] tracking-widest text-zinc-500 hover:text-white uppercase transition-colors">Log Out</button>
-        </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isAdminMenuOpen && (
+          <div className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-md mt-5 -mx-4 md:-mx-8">
+            <div className="px-6 py-4 space-y-3">
+              <a 
+                href="/" 
+                className="block text-sm tracking-[0.2em] uppercase text-zinc-400 hover:text-gold-500 transition-colors py-3 border-b border-white/5"
+              >
+                View Store →
+              </a>
+              <button
+                onClick={() => {
+                  setAuthed(false);
+                  setIsAdminMenuOpen(false);
+                }}
+                className="w-full text-left text-sm tracking-[0.2em] uppercase text-zinc-500 hover:text-white transition-colors py-3"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Tabs */}
-        <div className="flex gap-8 border-b border-white/10 mb-10">
-          {([['prices', 'Menu Prices'], ['discounts', 'Discounts'], ['products', 'All Products'], ['add', '+ Add New Product']] as const).map(([tab, label]) => (
-            <button key={tab} onClick={() => setActiveTab(tab)}
-              className={`pb-4 text-[11px] tracking-[0.3em] uppercase transition-all ${activeTab === tab ? 'text-white border-b-2 border-gold-500' : 'text-zinc-500 hover:text-zinc-300'}`}>
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Category Pills */}
-        {(activeTab === 'prices' || activeTab === 'discounts' || activeTab === 'products') && (
-          <div className="flex flex-wrap gap-4 mb-6">
-            {[{ id: 'all', name: 'All' }, ...CATEGORIES].map(cat => (
-              <button key={cat.id} onClick={() => setSelectedCategory(cat.id)}
-                className={`text-[10px] tracking-[0.25em] uppercase px-5 py-2 rounded-full border transition-all ${selectedCategory === cat.id ? 'bg-gold-600 text-black border-gold-600' : 'border-white/10 text-zinc-400 hover:border-gold-600/50 hover:text-white'}`}>
-                {cat.name}
+        {/* Tabs - Sticky on Mobile */}
+        <div className="sticky top-[73px] md:top-[89px] z-30 bg-zinc-950 -mx-6 px-6 pt-4 pb-2 mb-6">
+          <div className="flex gap-4 md:gap-8 border-b border-white/10 overflow-x-auto scrollbar-hide">
+            {([['prices', 'Menu Prices'], ['discounts', 'Discounts'], ['products', 'All Products'], ['add', '+ Add New Product']] as const).map(([tab, label]) => (
+              <button key={tab} onClick={() => setActiveTab(tab)}
+                className={`pb-4 text-[10px] md:text-[11px] tracking-[0.3em] uppercase transition-all whitespace-nowrap ${activeTab === tab ? 'text-white border-b-2 border-gold-500' : 'text-zinc-500 hover:text-zinc-300'}`}>
+                {label}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Category Pills - Sticky on Mobile */}
+        {(activeTab === 'prices' || activeTab === 'discounts' || activeTab === 'products') && (
+          <div className="sticky top-[130px] md:top-[145px] z-20 bg-zinc-950 -mx-6 px-6 py-3 mb-6">
+            <div className="flex flex-wrap gap-3 md:gap-4">
+              {[{ id: 'all', name: 'All' }, ...CATEGORIES].map(cat => (
+                <button key={cat.id} onClick={() => setSelectedCategory(cat.id)}
+                  className={`text-[9px] md:text-[10px] tracking-[0.25em] uppercase px-4 md:px-5 py-2 rounded-full border transition-all ${selectedCategory === cat.id ? 'bg-gold-600 text-black border-gold-600' : 'border-white/10 text-zinc-400 hover:border-gold-600/50 hover:text-white'}`}>
+                  {cat.name}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
