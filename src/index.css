@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Jost", sans-serif;
+  --font-serif: "Bodoni Moda", serif;
+
+  --color-gold-400: #E3D19A;
+  --color-gold-500: #C5A059;
+  --color-gold-600: #9E7D3F;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #000000;
+  }
+
+  /* Remove number input spinners globally */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer utilities {
+  .hairline-border {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .hairline-border-gold {
+    border: 1px solid rgba(197, 160, 89, 0.4);
+  }
+}
+
+/* Custom scrollbar for an elegant feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A059;
+}
