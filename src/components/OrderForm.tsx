@@ -42,7 +42,7 @@ export default function OrderForm({ isOpen, onClose, cart, total, onPlaceOrder }
       `Total: Rs. ${total.toFixed(2)}\n\n` +
       (formData.notes ? `Special Notes: ${formData.notes}\n` : '')
 
-    const whatsappUrl = `https://wa.me/919596911102?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/919697558712?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
     
     // Log the order and clear the cart!

@@ -27,7 +27,7 @@ export default function Footer() {
               </a>
               
               <a 
-                href="https://wa.me/919596911102" 
+                href="https://wa.me/919697558712" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-sm text-zinc-300 hover:text-green-500 transition-colors group"
@@ -74,7 +74,7 @@ export default function Footer() {
               <a href="tel:+919697558712" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">
                 Call Us
               </a>
-              <a href="https://wa.me/919596911102" target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">
+              <a href="https://wa.me/919697558712" target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">
                 WhatsApp
               </a>
               <a href="https://www.instagram.com/thepastrycorner_1" target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-gold-500 transition-colors uppercase tracking-wider">

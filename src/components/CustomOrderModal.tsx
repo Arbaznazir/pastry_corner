@@ -40,7 +40,7 @@ export default function CustomOrderModal({ isOpen, onClose }: CustomOrderModalPr
       `Needed By: ${formattedDate}\n\n` +
       `Details:\n${formData.details}`
 
-    const whatsappUrl = `https://wa.me/919596911102?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/919697558712?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
     
     // Clear form and close
