@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
+import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 import OrderForm from "./components/OrderForm";
 import RecentOrders from "./components/RecentOrders";
@@ -62,6 +63,8 @@ function App() {
         <Hero />
         <ProductGrid onAddToCart={addToCart} />
       </main>
+
+      <Footer />
 
       <Cart
         isOpen={isCartOpen}
