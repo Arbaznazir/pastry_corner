@@ -40,6 +40,17 @@ const BLANK_PRODUCT = {
   is_eid_special: false,
 };
 
+// Convert Google Drive sharing link to direct image URL
+const convertGDriveLink = (url: string): string => {
+  if (!url.includes('drive.google.com')) return url;
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    // Use googleusercontent.com for better embedding support
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
+  }
+  return url;
+};
+
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [username, setUsername] = useState('');
@@ -67,6 +78,10 @@ export default function AdminPage() {
   // Selected product discount state
   const [selectedForDiscount, setSelectedForDiscount] = useState<Set<number>>(new Set());
   const [productDiscountPercent, setProductDiscountPercent] = useState('');
+
+  // Google Drive link converter state
+  const [gdriveLinkInput, setGdriveLinkInput] = useState('');
+  const [convertedLink, setConvertedLink] = useState('');
 
   const fetchProducts = useCallback(async () => {
     const { data, error } = await supabase.from('products').select('*').order('sort_order');
@@ -503,7 +518,44 @@ export default function AdminPage() {
                       </div>
                       <textarea value={editForm.description} onChange={e => setEditForm((f: any) => ({ ...f, description: e.target.value }))} placeholder="Description" rows={2}
                         className="w-full bg-zinc-950 border border-white/10 rounded-xl px-5 py-3 text-sm text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors resize-none" />
-                      <input value={editForm.image} onChange={e => setEditForm((f: any) => ({ ...f, image: e.target.value }))} placeholder="Image URL (Google Drive, Imgur, etc.)"
+                      
+                      {/* Google Drive Link Converter */}
+                      <div className="bg-zinc-950/60 border border-gold-500/20 rounded-xl p-3 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-3 h-3 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                          <span className="text-[9px] tracking-widest uppercase text-gold-500 font-medium">Google Drive Link Converter</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <input 
+                            type="text"
+                            placeholder="Paste Google Drive sharing link..."
+                            value={gdriveLinkInput}
+                            onChange={e => setGdriveLinkInput(e.target.value)}
+                            className="flex-1 bg-zinc-900 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const converted = convertGDriveLink(gdriveLinkInput);
+                              setConvertedLink(converted);
+                              setEditForm((f: any) => ({ ...f, image: converted }));
+                            }}
+                            className="bg-gold-600 text-black text-[8px] tracking-widest uppercase px-3 py-1.5 rounded-lg hover:bg-gold-500 transition-colors font-medium"
+                          >
+                            Convert
+                          </button>
+                        </div>
+                        {convertedLink && (
+                          <div className="bg-zinc-900 border border-green-500/30 rounded-lg p-2 space-y-1">
+                            <p className="text-[8px] tracking-wider uppercase text-green-400">✓ Converted</p>
+                            <p className="text-[10px] text-zinc-300 break-all font-mono">{convertedLink}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      <input value={editForm.image} onChange={e => setEditForm((f: any) => ({ ...f, image: e.target.value }))} placeholder="Image URL (paste converted link)"
                         className="w-full bg-zinc-950 border border-white/10 rounded-xl px-5 py-3 text-sm text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors" />
                       <input value={editForm.unit} onChange={e => setEditForm((f: any) => ({ ...f, unit: e.target.value }))} placeholder="Unit (e.g. per kg, piece)"
                         className="w-full bg-zinc-950 border border-white/10 rounded-xl px-5 py-3 text-sm text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors" />
@@ -578,7 +630,54 @@ export default function AdminPage() {
             </div>
             <textarea placeholder="Description" value={newProduct.description} onChange={e => setNewProduct(p => ({ ...p, description: e.target.value }))} rows={3}
               className="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-5 py-4 text-sm text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors resize-none" />
-            <input placeholder="Image URL (Google Drive, Imgur, etc. - Leave blank for default)" value={newProduct.image} onChange={e => setNewProduct(p => ({ ...p, image: e.target.value }))}
+            
+            {/* Google Drive Link Converter */}
+            <div className="bg-zinc-900/40 border border-gold-500/20 rounded-xl p-4 space-y-3">
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-4 h-4 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span className="text-[10px] tracking-widest uppercase text-gold-500 font-medium">Google Drive Link Converter</span>
+              </div>
+              <div className="flex gap-2">
+                <input 
+                  type="text"
+                  placeholder="Paste Google Drive sharing link here..."
+                  value={gdriveLinkInput}
+                  onChange={e => setGdriveLinkInput(e.target.value)}
+                  className="flex-1 bg-zinc-950 border border-white/10 rounded-lg px-4 py-2 text-xs text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const converted = convertGDriveLink(gdriveLinkInput);
+                    setConvertedLink(converted);
+                    setNewProduct(p => ({ ...p, image: converted }));
+                  }}
+                  className="bg-gold-600 text-black text-[9px] tracking-widest uppercase px-4 py-2 rounded-lg hover:bg-gold-500 transition-colors font-medium"
+                >
+                  Convert
+                </button>
+              </div>
+              {convertedLink && (
+                <div className="bg-zinc-950 border border-green-500/30 rounded-lg p-3 space-y-2">
+                  <p className="text-[9px] tracking-wider uppercase text-green-400">✓ Converted Link:</p>
+                  <p className="text-xs text-zinc-300 break-all font-mono">{convertedLink}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(convertedLink);
+                      alert('Link copied to clipboard!');
+                    }}
+                    className="text-[9px] tracking-widest uppercase text-gold-500 hover:text-gold-400 transition-colors"
+                  >
+                    Copy to Clipboard
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <input placeholder="Image URL (paste converted link or any direct image URL)" value={newProduct.image} onChange={e => setNewProduct(p => ({ ...p, image: e.target.value }))}
               className="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-5 py-4 text-sm text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors" />
             <input placeholder="Unit (e.g. per kg, piece, 100g)" value={newProduct.unit} onChange={e => setNewProduct(p => ({ ...p, unit: e.target.value }))}
               className="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-5 py-4 text-sm text-white font-light placeholder:text-zinc-500 focus:border-gold-500 focus:outline-none transition-colors" />
